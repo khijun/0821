@@ -31,18 +31,41 @@ public class BoardDao {
     public int getNumRecords() {
         return bm.getCount();
     }
+    
+    public int getNumRecordsByTitle(String title) {
+    	return bm.getCountByTitle(title);
+    }
+    
+    public int getNumRecordsByContent(String content) {
+    	return bm.getCountByContent(content);
+    }
+    
+    public int getNumRecordsByWriterName(String writerName) {
+    	return bm.getCountByWriterName(writerName);
+    }
 
     // 게시글 리스트 읽기
-    public List<BoardDto> selectList(Map<String, Integer> param) {
-        return bm.getList(param);
+    public List<BoardDto> selectList(SearchDto searchDto) {
+        return bm.getList(searchDto);
     }
 
     public BoardDto selectOne(int num) {
     	return bm.getOne(num);
     }
     
+    public List<BoardDto> selectByTitle(SearchDto searchDto){
+    	return bm.getListByTitle(searchDto);
+    }
+    
+    public List<BoardDto> selectByContent(SearchDto searchDto){
+    	return bm.getListByContent(searchDto);
+    }
+    
+    public List<BoardDto> selectByWriterName(SearchDto searchDto){
+    	return bm.getListByWriterName(searchDto);
+    }
+    
     public void insertOne(BoardDto dto) {
-    	System.out.println(dto);	// 테스트
     	dto.setRegtime(getCurrentTime());
     	bm.insert(dto);
     }

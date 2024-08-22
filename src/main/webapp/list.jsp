@@ -49,15 +49,21 @@
 						class="nav-link dropdown-toggle" href="#" role="button"
 						data-bs-toggle="dropdown" aria-expanded="false"> 메뉴 </a>
 						<ul class="dropdown-menu">
-							<li><a class="dropdown-item" href="#">아직</a></li>
-							<li><a class="dropdown-item" href="#">아무 것도</a></li>
+							<li><a class="dropdown-item" href="#">1</a></li>
+							<li><a class="dropdown-item" href="#">2</a></li>
 							<li><hr class="dropdown-divider"></li>
-							<li><a class="dropdown-item" href="#">없지롱</a></li>
+							<li><a class="dropdown-item" href="#">3</a></li>
 						</ul></li>
 				</ul>
-				<form class="d-flex" role="search">
-					<input class="form-control me-2" type="search" placeholder="검색"
-						aria-label="Search">
+				<form class="d-flex" role="search" action="search">
+					<select name="searchBy" class="form-select" style="width: 100px;">
+						<option value="title">제목</option>
+						<option value="content"
+							<c:if test="${searchBy=='content' }">selected="selected"</c:if>>내용</option>
+						<option value="writerName"
+							<c:if test="${searchBy=='writerName' }">selected="selected"</c:if>>작성자</option>
+					</select> <input class="form-control me-2" type="Search" placeholder="검색"
+						aria-label="Search" name="searchKeyword">
 					<button class="btn btn-outline-success" type="submit">
 						<img
 							src="${pageContext.request.contextPath }/assets/brand/search.svg">
@@ -91,18 +97,38 @@
 			</tbody>
 		</table>
 		<br>
-		<button class="btn btn-outline-primary"
-			onclick="location.href='write'" <c:if test="${memberNo == null }">disabled</c:if>>글쓰기</button>
-		<c:choose>
-			<c:when test="${memberNo != null}">
-				<button class="btn btn-outline-success"
-					onclick="location.href='logout'">로그아웃</button>
-			</c:when>
-			<c:otherwise>
-				<button class="btn btn-outline-success"
-					onclick="location.href='login'">로그인</button>
-			</c:otherwise>
-		</c:choose>
+		<div style="display: flex; justify-content: space-between;">
+			<div>
+				<button class="btn btn-outline-primary"
+					onclick="location.href='write'"
+					<c:if test="${memberNo == null }">disabled</c:if>>글쓰기</button>
+				<c:choose>
+					<c:when test="${memberNo != null}">
+						<button class="btn btn-outline-success"
+							onclick="location.href='logout'">로그아웃</button>
+					</c:when>
+					<c:otherwise>
+						<button class="btn btn-outline-success"
+							onclick="location.href='login'">로그인</button>
+					</c:otherwise>
+				</c:choose>
+			</div>
+			<form action="search" class="d-flex">
+				<select name="searchBy" class="form-select" style="width: 100px;">
+					<option value="title">제목</option>
+					<option value="content"
+						<c:if test="${searchBy=='content' }">selected="selected"</c:if>>내용</option>
+					<option value="writerName"
+						<c:if test="${searchBy=='writerName' }">selected="selected"</c:if>>작성자</option>
+				</select> <input class="form-control" type="Search" placeholder="검색"
+					aria-label="Search" name="searchKeyword">
+				<button class="btn btn-outline-success" type="submit">
+					<img
+						src="${pageContext.request.contextPath }/assets/brand/test.jpg"
+						style="width: 50px;">
+				</button>
+			</form>
+		</div>
 		<br>
 		<div style="text-align: center;">
 			<c:forEach var="pgn" items="${pgnList}">
@@ -115,7 +141,7 @@
                      "btn btn-light"
                  </c:otherwise>
 					</c:choose>
-					onclick="location.href='list?page=${pgn.pageNo}'">
+					onclick="location.href='<c:if test="${!searchOption}">list?page=${pgn.pageNo}'"></c:if><c:if test="${searchOption}">search?&searchBy=${searchBy }&searchKeyword=${searchKeyword }&page=${pgn.pageNo}'" ></c:if>
 					<c:choose>
 						<c:when test="${pgn.curPage}">
 							${pgn.display}

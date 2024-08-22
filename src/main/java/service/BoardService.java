@@ -9,25 +9,50 @@ import db.*;
 
 import db.BoardDao;
 import db.BoardDto;
+import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 public class BoardService {
 
 	private BoardDao dao = BoardDao.getInstance();
     private static final int listSize = 5;
     private static final int paginationSize = 3;
-
-    public List<BoardDto> getMsgList(int pageNo) {
-    	Map<String, Integer> param = new HashMap<String, Integer>();
-    	param.put("start", (pageNo-1) * listSize+1);
-    	param.put("listsize", pageNo * listSize);
-    	return dao.selectList(param);
+    
+    public List<BoardDto> getMsgList(SearchDto searchDto) {
+    	return dao.selectList(searchDto);
     }
 
+    public List<BoardDto> getMsgList(int pageNo) {
+    	return getMsgList(pageNo, "", "");
+    }
+    
+    public List<BoardDto> getMsgList(int pageNo,String searchBy, String searchKeyword) {
+    	SearchDto searchDto = new SearchDto(pageNo,listSize, searchBy, "%"+searchKeyword+"%");
+    	switch(searchBy) {
+    	case "title":
+    		return dao.selectByTitle(searchDto);
+    	case "content":
+    		return dao.selectByContent(searchDto);
+    	case "writerName":
+    		return dao.selectByWriterName(searchDto);
+    	default:
+    		return dao.selectList(searchDto);
+    	}
+    }
+    
     public ArrayList<Pagination> getPagination(int pageNo) {
-
+    	return getPagination(pageNo, null, null);
+    }
+    public ArrayList<Pagination> getPagination(int pageNo, String searchBy, String searchKeyword) {
+    	
+    	searchBy = searchBy==null?"default":searchBy;
+    	int numRecords = 
+    		searchBy.equals("title")?dao.getNumRecordsByTitle("%"+searchKeyword+"%"):
+    		searchBy.equals("content")?dao.getNumRecordsByContent("%"+searchKeyword+"%"):
+    		searchBy.equals("writerName")?dao.getNumRecordsByWriterName("%"+searchKeyword+"%"):
+    		dao.getNumRecords();
         ArrayList<Pagination> pgnList = new ArrayList<Pagination>();
-
-        int numRecords = dao.getNumRecords();
         int numPages = (int)Math.ceil((double)numRecords / listSize);
 
         int firstLink = ((pageNo - 1) / paginationSize)
@@ -71,6 +96,8 @@ public class BoardService {
     public BoardDto getMsgForWrite(int num) {
         return dao.selectOne(num);
     }
+    
+    
 
     public void writeMsg(int writer, String title, String content)
             throws Exception {
@@ -78,7 +105,6 @@ public class BoardService {
         if (writer == 0||
         	title   == null || title.length()   == 0 ||
             content == null || content.length() == 0) {
-        	System.out.println("에러남?");
            throw new Exception("모든 항목이 빈칸 없이 입력되어야 합니다.");
         }
 

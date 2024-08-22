@@ -65,29 +65,5 @@
 			</div>
 		</div>
 	</nav>
-	<script
-		src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
-		integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
-		crossorigin="anonymous"></script>
-	<div class="w-75" style="margin: 50px;">
-		<form method="post" action="${action}">
-			<table class="table table-bordered">
-				<tr>
-					<th class="table-light" style="text-align: center; width: 20%;">제목</th>
-					<td><input type="text" name="title" maxlength="80"
-						value="${msg.title}" class="w-100 form-control"></td>
-				</tr>
-				<tr>
-					<th class="table-light" style="text-align: center;">내용</th>
-					<td style="height: 400px;"><textarea name="content"
-							class="w-100 h-100  form-control">${msg.content}</textarea></td>
-				</tr>
-			</table>
-
-			<br> <input type="submit" value="저장"
-				class="btn btn-outline-primary"> <input type="button"
-				value="취소" onclick="history.back()" class="btn btn-outline-danger">
-		</form>
-	</div>
 </body>
 </html>
